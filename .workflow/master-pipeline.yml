@@ -2,11 +2,11 @@ version: '1.0'
 name: dtk-build-commit-20220425
 displayName: dtk-build-commit
 triggers:
-  trigger: manual
+  trigger: auto
   push:
     branches:
-      include:
-        - '*'
+      prefix:
+        - ''
     tags:
       prefix:
         - ''
