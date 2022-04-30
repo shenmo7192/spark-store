@@ -20,7 +20,6 @@ stages:
       - step: execute@docker
         name: execute_by_docker
         displayName: Build
-        certificate: d3a72e50-a6b5-013a-3031-5e77c3ac149e
         image: g3xe0gm8.mirror.aliyuncs.com/shenmo7192/uos-21-dtk5.4
         command:
           - dpkg-buildpackage
