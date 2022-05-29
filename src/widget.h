@@ -86,6 +86,7 @@ private slots:
     void downloadIconsFinished(int arraysize); // 当前搜索列表图标是否下载完成
 
     void on_pushButton_download_clicked();
+    void on_pushButton_torrent_clicked();
     void on_pushButton_return_clicked();
     void on_comboBox_server_currentIndexChanged(const QString &arg1);
     void on_pushButton_updateServer_clicked();

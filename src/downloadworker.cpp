@@ -8,7 +8,7 @@
 #include <QRegularExpression>
 #include <QFileInfo>
 #include <QDir>
-
+#include<QDebug>
 DownloadWorker::DownloadWorker(QObject *parent)
 {
     Q_UNUSED(parent)

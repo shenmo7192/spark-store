@@ -32,6 +32,8 @@
 #include "HttpClient.h"
 #include "downloadworker.h"
 
+#include <QDebug>
+
 DWIDGET_USE_NAMESPACE
 
 Widget::Widget(DBlurEffectWidget *parent) :
@@ -629,6 +631,70 @@ void Widget::on_pushButton_download_clicked()
     item->setFlags(item->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
     ui->listWidget->setItemWidget(item, &download_list[allDownload - 1]);
     urList.append(url);
+    download_list[allDownload - 1].setName(appName);
+    download_list[allDownload - 1].setFileName(fileName);
+
+    QPixmap icon;
+    icon.load("/tmp/spark-store/icon.png", "PNG");
+    system("cp /tmp/spark-store/icon.png /tmp/spark-store/icon_" + QString::number(allDownload - 1).toUtf8() + ".png");
+    download_list[allDownload - 1].seticon(icon);
+
+    if(!isBusy)
+    {
+        /*
+        file = new QFile(fileName);
+        if(!file->open(QIODevice::WriteOnly))
+        {
+            delete file;
+            file = nullptr;
+            return;
+        }
+        */
+
+        nowDownload += 1;
+        startRequest(urList.at(nowDownload - 1), fileName);     // 进行链接请求
+    }
+
+    if(ui->pushButton_download->text() == tr("Reinstall"))
+    {
+        download_list[allDownload - 1].reinstall = true;
+    }
+}
+
+
+void Widget::on_pushButton_torrent_clicked()
+{
+
+    chooseLeftMenu(13);
+
+    allDownload += 1;
+
+    QString downloadurl(url.path());
+
+    QUrl  btUrl = "https://d.store.deepinos.org.cn"+downloadurl +  ".torrent";//新的bt链接
+
+     qInfo()<<"合成的bt链接是"<<btUrl;
+
+    QFileInfo info(btUrl.path());
+
+    QString fileName(info.fileName());  // 获取文件名
+
+
+    download_list[allDownload - 1].pkgName = pkgName;
+    qInfo()<<"pkgName:   "<<pkgName;
+    if(fileName.isEmpty())
+    {
+        sendNotification(tr("Failed to get the name to the file to be downloaded."));
+        return;
+    }
+
+    download_list[allDownload - 1].setParent(ui->listWidget);
+    QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+    item->setSizeHint(download_list[allDownload - 1].size());
+    item->setFlags(item->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
+    ui->listWidget->setItemWidget(item, &download_list[allDownload - 1]);
+    urList.append(btUrl);//1代表是bt下载
+//    urList.append(btUrl);
     download_list[allDownload - 1].setName(appName);
     download_list[allDownload - 1].setFileName(fileName);
 
