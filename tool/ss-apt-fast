@@ -18,9 +18,16 @@ curl --progress-bar -o /tmp/ss-apt-fast-conf/apt-fast.conf "https://gitee.com/de
 
 chmod -R 755 /tmp/ss-apt-fast-conf
 
-bwrap --dev-bind / / \
+if [[ $1 == "policy" ]]; then
+        bwrap --dev-bind / / \
+                   --bind '/tmp/ss-apt-fast-conf/apt-fast.conf' /etc/apt-fast.conf \
+                   --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list \
+                apt "$@"
+else
+	bwrap --dev-bind / / \
 		   --bind '/tmp/ss-apt-fast-conf/apt-fast.conf' /etc/apt-fast.conf \
 		   --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list \
                 apt-fast "$@"
+fi
 
 rm -rf  /tmp/ss-apt-fast-conf
