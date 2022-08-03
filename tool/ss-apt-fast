@@ -13,7 +13,7 @@ echo "从服务器获取配置和镜像列表..."
 echo "Getting server and mirror lists..."
 echo
 
-curl -s --progress-bar -o /tmp/ss-apt-fast-conf/apt-fast.conf "https://gitee.com/deepin-community-store/repo_auto_update_script/raw/master/mirror-list-for-apt-fast/apt-fast.conf"
+curl --progress-bar -o /tmp/ss-apt-fast-conf/apt-fast.conf "https://gitee.com/deepin-community-store/repo_auto_update_script/raw/master/mirror-list-for-apt-fast/apt-fast.conf"
 
 
 chmod -R 755 /tmp/ss-apt-fast-conf
