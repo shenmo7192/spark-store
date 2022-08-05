@@ -139,7 +139,7 @@ void downloadlist::install(int t)
             switch(t)
             {
             case 0:
-                installer.start("pkexec", QStringList() << "ssinstall" << "/tmp/spark-store/" + ui->label_filename->text().toUtf8());
+                installer.start("/usr/local/bin/ssinstall", QStringList()  << "/tmp/spark-store/" + ui->label_filename->text().toUtf8());
                 break;
             case 1:
                 installer.start("deepin-deb-installer", QStringList() << "/tmp/spark-store/" + ui->label_filename->text().toUtf8());

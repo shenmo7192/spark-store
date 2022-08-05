@@ -14,7 +14,7 @@ else
 text_update_open="开启"
 fi
 
-if [  -f /usr/share/polkit-1/actions/store.spark-app.ssinstall.policy ];then 
+if [  -f /usr/share/polkit-1/actions/store.spark-app.spark-store.policy ];then 
 text_auto_install_open="关闭"
 #已经开启了就显示关闭
 else
@@ -81,32 +81,19 @@ case $option in
 	reset
 	;;
 	3)
-	if [ -f /usr/share/polkit-1/actions/store.spark-app.ssinstall.policy ];then 
-	echo "---检测到已经启动了免输入密码，执行关闭"
-	sudo rm /usr/share/polkit-1/actions/store.spark-app.ssinstall.policy
+if [ -f /usr/share/polkit-1/actions/store.spark-app.spark-store.policy ];then 
+	echo "---检测到已经启动了免输入密码，执行关闭，将在下次启动商店生效"
+	sudo rm /usr/share/polkit-1/actions/store.spark-app.spark-store.policy
+	sudo chmod 666 /tmp/spark-store/*
 	sleep 3
 	reset
 	else
-
-cat << EOF
-请注意：这个功能尚未开发完成，一旦开启，则运行pkexec ssinstall时不再需要授权
-仅对星火内置安装器生效
-理论上会存在一定的安全风险~
-如果接受，请输入1，否则输入2
-EOF
-read is_accept_polkiy
-
-if [ "$is_accept_polkiy" = "1" ];then
 	echo "执行以下操作需要授权..."
-	sudo ln -s /opt/durapps/spark-store/bin/auto-install-policy/store.spark-app.ssinstall.policy /usr/share/polkit-1/actions/store.spark-app.ssinstall.policy
-	echo "---已启动"
+	sudo ln -s -f /opt/durapps/spark-store/bin/auto-install-policy/store.spark-app.spark-store.policy /usr/share/polkit-1/actions/store.spark-app.spark-store.policy
+	echo "---已启动，将在下次启动商店生效"
 	sleep 3
 	reset
-	else
-	echo "---未同意，返回"
-	sleep 3
-	reset
-fi
+	
 fi
 	;;
 	4)

@@ -1,13 +1,15 @@
 #!/bin/sh
 
+######卸载/更新：删除可执行链接
+
 # Remove residual symbol links
 rm /usr/local/bin/spark-store
 rm /usr/local/bin/ssinstall
 rm /usr/local/bin/spark-dstore-patch
-rm /usr/local/bin/ussinstall
-rm /usr/local/bin/ussremove
 rm /usr/local/bin/ss-apt-fast
+rm /usr/local/bin/spark-store-launcher
 
+######卸载/更新：关闭服务，删除服务链接
 # Remove residual symbol links to stop upgrade detect if exist
 if [ -f /etc/xdg/autostart/spark-update-notifier.desktop ];then
 rm /etc/xdg/autostart/spark-update-notifier.desktop
@@ -20,16 +22,16 @@ service spark-update-notifier stop
 systemctl disable spark-update-notifier
 
 
-
 # Clean the update-number service place file if exist
 if [ -d "/tmp/spark-store-updatenum/" ] ; then
 	rm -rf /tmp/spark-store-updatenum/
 fi
 
-# Clean the auto install polkit file if exist
-if [ -f "/usr/share/polkit-1/actions/store.spark-app.ssinstall.policy" ] ; then
-	rm /usr/share/polkit-1/actions/store.spark-app.ssinstall.policy
+# Clean the passwd-free install polkit file if exist
+if [ -f "/usr/share/polkit-1/actions/store.spark-app.spark-store.policy" ] ; then
+	rm /usr/share/polkit-1/actions/store.spark-app.spark-store.policy
 fi
+######卸载/更新：清理gpg
 
 # Remove gpg key file
 if [ -f "/etc/apt/trusted.gpg.d/spark-store.gpg" ] ; then

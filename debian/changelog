@@ -1,4 +1,11 @@
+spark-store (3.1.3-3) stable; urgency=medium
 
+  * 调整 更新和安装设置现在使用图形化界面
+  * 现在免密码安装的策略是启动商店时要求以root运行
+  * ssinstall现在发现不是root权限时会pkexec获取
+  * 移除了ussinstall等功能
+
+ -- shenmo <shenmo@spark-app.store>  Fri, 30 Jan 2022 00:00:00 +0800
 
 spark-store (3.1.3-2) stable; urgency=medium
 

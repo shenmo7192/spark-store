@@ -1,0 +1,21 @@
+#!/bin/bash
+if [ "$(id -u)" = "0" ]
+then
+
+export DISPLAY=:0.0  XAUTHORITY=$XAUTHORITY
+/usr/local/bin/spark-store "$@" --no-sandbox 
+
+else
+
+if [ -e "/usr/share/polkit-1/actions/store.spark-app.spark-store.policy" ];then
+echo "已经启动免密码安装，root启动"
+
+pkexec /usr/local/bin/spark-store-launcher "$@"
+exit
+
+else
+echo "未启动免密码安装"
+spark-store "$@"
+fi
+
+fi

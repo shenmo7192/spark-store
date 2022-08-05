@@ -15,25 +15,16 @@ then
 	echo "文件不存在"
 	exit 1
 fi
+
+deb_path="$(cd "$(dirname "$1")";pwd)/$(basename $1)"
+
 #################root校验+要密码
 if [ "$(id -u)" != "0" ]
 then
-    echo "ssinstall需要在root下运行";
-	uname=`whoami`
-	echo "Now input the password of $uname"
-	read -e upass
-	################检查密码对不对
-    echo "$upass" | sudo -S echo "i love amber forever"
-	passcheck=`echo "$upass" | sudo -S echo "i love amber forever"`
-	if [ "$passcheck" != "i love amber forever" ];then
-	echo "-----------------------------------------------------"
-	echo "E:密码错误,退出脚本！"
-	exit 1		
-	fi
+	echo "ssinstall需要在root下运行";
+	pkexec ssinstall "$deb_path"
+	exit
 fi
-
-
-
 
 
 
@@ -41,33 +32,6 @@ fi
 ##################apt-fast/metalink测试
 DEPEND="这里一定会安装所以放弃处理"
 isuos=`cat /etc/os-release | grep UnionTech`
-
-
-##############判断是否是root运行，如果是，则正常走；如果不是，则代输密码
-if [ "$(id -u)" != "0" ];then
-#############################无root权限时
-
-
-
-if [ "$DEPEND" != "" ]  && [ "$isuos" != "" ]; then
-echo "UOS中系统依赖无法使用第三方下载工具，放弃使用apt-fast"
-echo ----------------------------------------------------------------------------------
-echo "$upass" | sudo -S dpkg -i $1 || sudo ss-apt-fast ssupdate && sudo bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt install -yf
-
-
-fi
-
-if  [ "$DEPEND" != "" ]  && [ "$isuos" = "" ]; then
-echo "检测到apt-fast，使用ss-apt-fast进行多线程下载加速"
-echo ----------------------------------------------------------------------------------
-echo "$upass" | sudo -S dpkg -i $1 || sudo ss-apt-fast ssupdate && sudo ss-apt-fast install -yf 
-fi
-
-
-
-
-
-else
 ###########################有root权限时
 
 
@@ -76,16 +40,16 @@ else
 if [ "$DEPEND" != "" ]  && [ "$isuos" != "" ]; then
 echo "UOS中系统依赖无法使用第三方下载工具，放弃使用apt-fast"
 echo ----------------------------------------------------------------------------------
-dpkg -i $1 || ss-apt-fast ssupdate && bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt update && sudo bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt install -yf
+dpkg -i $1 || /usr/local/bin/ss-apt-fast ssupdate && bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt update && sudo bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt install -yf
 fi
 
 if  [ "$DEPEND" != "" ]  && [ "$isuos" = "" ]; then
 echo "检测到apt-fast，使用ss-apt-fast进行多线程下载加速"
 echo ----------------------------------------------------------------------------------
-dpkg -i $1 || ss-apt-fast ssupdate && ss-apt-fast install -yf 
+dpkg -i $1 || /usr/local/bin/ss-apt-fast ssupdate && /usr/local/bin/ss-apt-fast install -yf 
 fi
 
 
 
 
-fi
+

@@ -5,26 +5,32 @@ case "$1" in
 		# Check if /usr/local/bin existed
 		mkdir -p /usr/local/bin
 
+######安装：创建链接给可执行
 		# Create symbol links for binary files
-		ln -s -f /opt/durapps/spark-store/bin/ussinstall /usr/local/bin/ussinstall
-		ln -s -f /opt/durapps/spark-store/bin/ussremove /usr/local/bin/ussremove
 		ln -s -f /opt/durapps/spark-store/bin/spark-store /usr/local/bin/spark-store
 		ln -s -f /opt/durapps/spark-store/bin/ssinstall /usr/local/bin/ssinstall
 		ln -s -f /opt/durapps/spark-store/bin/spark-dstore-patch /usr/local/bin/spark-dstore-patch
 		ln -s -f /opt/durapps/spark-store/bin/ss-apt-fast /usr/local/bin/ss-apt-fast
+		ln -s -f /opt/durapps/spark-store/bin/spark-store-launcher /usr/local/bin/spark-store-launcher
+######安装：创建链接启动服务和免密码安装功能
+		# Create symbol links to start upgrade detect
+		ln -s /opt/durapps/spark-store/bin/update-upgrade/autostart/spark-update-notifier.desktop /etc/xdg/autostart/spark-update-notifier.desktop
+		# Create symbol links to start passwd-free install
+		ln -s -f /opt/durapps/spark-store/bin/auto-install-policy/store.spark-app.spark-store.policy /usr/share/polkit-1/actions/store.spark-app.spark-store.policy
 
-
+######安装：启动服务
+		# Start upgrade detect service
+		systemctl enable spark-update-notifier
+		service spark-update-notifier start
+######安装：初始化软件仓库
+		# Remove existing source file
+		rm -f /etc/apt/preferences.d/sparkstore
+		rm -f /etc/apt/sources.list.d/sparkstore.list
 
 		# Download and install key
 		wget -O /tmp/spark-store-install/spark-store.asc https://d.store.deepinos.org.cn/dcs-repo.gpg-key.asc 
 		gpg --dearmor /tmp/spark-store-install/spark-store.asc 
 		cp -f /tmp/spark-store-install/spark-store.asc.gpg /etc/apt/trusted.gpg.d/spark-store.gpg
-
-
-		# Remove existing source file
-		rm -f /etc/apt/preferences.d/sparkstore
-		rm -f /etc/apt/sources.list.d/sparkstore.list
-
 
         	# Run apt update to avoid users being fucked up by the non-exist dependency problem
 
@@ -32,15 +38,7 @@ case "$1" in
 		# 下载源列表
         	bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt update -o Dir::Etc::sourcelist="sources.list.d/sparkstore.list"     -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
 		# 更新
-
-
-		# Create symbo links to start upgrade detect
-		ln -s /opt/durapps/spark-store/bin/update-upgrade/autostart/spark-update-notifier.desktop /etc/xdg/autostart/spark-update-notifier.desktop
-
-		# Start upgrade detect service
-		systemctl enable spark-update-notifier
-		service spark-update-notifier start
-		
+######安装：刷新图标/mimetype缓存和杂项
 
 		# Update certain caches
 		update-icon-caches /usr/share/icons/hicolor || true
