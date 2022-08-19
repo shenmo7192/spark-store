@@ -84,7 +84,7 @@ fi
 if [ "$DEPEND" != "" ]  && [ "$isuos" != "" ]; then
 echo "UOS中系统依赖无法使用第三方下载工具，放弃使用apt-fast"
 echo ----------------------------------------------------------------------------------
-dpkg -i $1 || aptss ssupdate && bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt update && sudo bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt install -yf
+dpkg -i $1 || aptss ssupdate && sudo bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt install -yf
 fi
 
 if  [ "$DEPEND" != "" ]  && [ "$isuos" = "" ]; then

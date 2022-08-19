@@ -33,10 +33,7 @@ case "$1" in
 
         	# Run apt update to avoid users being fucked up by the non-exist dependency problem
 
-		curl --progress-bar -o /opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list "https://gitee.com/deepin-community-store/repo_auto_update_script/raw/master/mirror-list-for-apt-fast/sources.list.d/sparkstore.list"
-		# 下载源列表
-        	bwrap --dev-bind / / --bind '/opt/durapps/spark-store/bin/apt-fast-conf/sources.list.d/sparkstore.list' /etc/apt/sources.list.d/sparkstore.list apt update -o Dir::Etc::sourcelist="sources.list.d/sparkstore.list"     -o Dir::Etc::sourceparts="-" 
-		# 更新
+		aptss ssupdate
 
 
 		# Start upgrade detect service
