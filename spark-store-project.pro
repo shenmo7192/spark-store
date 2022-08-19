@@ -54,7 +54,7 @@ INSTALLS += \
     icon \
     preferences \
     tmp \
-    service 
-#   bash_completion
+    service \
+    bash_completion
 #	polkit-1 
 #   暂时不添加

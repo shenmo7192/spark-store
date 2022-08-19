@@ -185,7 +185,7 @@ _aptss()
                 return 0
                 ;;
             show|list|download|changelog|depends|rdepends)
-                COMPREPLY=( $(  apt-cache --no-generate pkgnames "$cur" \
+                    COMPREPLY=( $(  apt-cache --no-generate pkgnames "$cur" \
                     2> /dev/null ) )
                 return 0
                 ;;
