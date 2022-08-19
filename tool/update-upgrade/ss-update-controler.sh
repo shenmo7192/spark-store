@@ -68,7 +68,7 @@ case $option in
 	2)
 	echo "执行以下操作需要授权..."
 	sudo ss-apt-fast ssupdate
-       /opt/durapps/spark-store/bin/update-upgrade/ss-upgrade-list.sh
+    /opt/durapps/spark-store/bin/update-upgrade/ss-upgrade-list.sh
 	/opt/durapps/spark-store/bin/update-upgrade/ss-do-upgrade.sh
 	echo "---请按回车返回"
 	read
