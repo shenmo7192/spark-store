@@ -896,7 +896,7 @@ void Widget::sltAppinfoDetails(QString *name, QString *details, QString *info,
     // 去除换行符
     downloadTimes += " " + (tr("Downloads"));
     // 合并文案
-    qDebug() << "下载次数" + downloadTimes << Qt::endl ;
+    qDebug() << "下载次数" + downloadTimes ;
     ui->label_download_times->setText(downloadTimes);
 
 
