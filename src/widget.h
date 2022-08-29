@@ -103,8 +103,10 @@ private slots:
     void on_pushButton_refresh_clicked();
     void on_pushButton_update_clicked();
 
+
   public:
     QUrl url;
+
 
     downloadlist download_list[LIST_MAX];
     Ui::Widget *ui;
@@ -129,6 +131,16 @@ private:
     void updateUI();
 
     quint64 dirFileSize(const QString &path);
+    QString downloadTimesUrl;
+
+    QString executeLinuxCmd(QString strCmd)
+    {
+        QProcess p;
+        p.start("bash", QStringList() <<"-c" << strCmd);
+        p.waitForFinished();
+        QString strResult = p.readAllStandardOutput();
+        return strResult;
+    }
 
 private:
     QPushButton * left_list[15];

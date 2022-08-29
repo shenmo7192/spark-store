@@ -34,6 +34,8 @@
 
 DWIDGET_USE_NAMESPACE
 
+
+
 Widget::Widget(DBlurEffectWidget *parent) :
     DBlurEffectWidget(parent),
     ui(new Ui::Widget)
@@ -826,6 +828,7 @@ void Widget::sltAppinfoResetUi()
     ui->tag_dwine2->hide();
     ui->tag_dwine5->hide();
     ui->tag_a2d->hide();
+    ui->label_download_times->hide();
 
     //　重置 UI 状态
     ui->pushButton_uninstall->hide();
@@ -885,6 +888,17 @@ void Widget::sltAppinfoDetails(QString *name, QString *details, QString *info,
     ui->label_info->show();
     ui->label_more->setText(*info);
     ui->label_more->show();
+    ui->label_download_times->show();
+
+    QString downloadTimes;
+    downloadTimes = executeLinuxCmd("head -n 1 /tmp/spark-store/download-times.txt");
+    downloadTimes = downloadTimes.trimmed();
+    // 去除换行符
+    downloadTimes += " " + (tr("Downloads"));
+    // 合并文案
+    qDebug() << "下载次数" + downloadTimes << Qt::endl ;
+    ui->label_download_times->setText(downloadTimes);
+
 
     pkgName = *packageName;
     url = *fileUrl;
@@ -1308,12 +1322,15 @@ void Widget::on_stackedWidget_currentChanged(int arg1)
 void Widget::on_webEngineView_urlChanged(const QUrl &arg1)
 {
     //分析出服务器中的分类名称
+
     QStringList url_ = arg1.path().split("/");
     QString pname;
+
+
     if(url_.size() > 3)
     {
-        type_name = url_[2];
-        pname = url_[3];
+        type_name = url_[3];
+        pname = url_[4];
     }
     //如果是app.json就打开详情页
     if(arg1.path().right(8) == "app.json")
@@ -1328,8 +1345,14 @@ void Widget::on_webEngineView_urlChanged(const QUrl &arg1)
         ui->label_appname->clear();
         ui->pushButton_download->setEnabled(false);
         ui->stackedWidget->setCurrentIndex(2);
-        qDebug() << "https://d.store.deepinos.org.cn/" + type_name + "/" + pname;
+        qDebug() << "https://d.store.deepinos.org.cn/store/"  + type_name + "/" + pname;
         qDebug() << "链接地址：" << arg1;
+        downloadTimesUrl= serverUrl + "store/" + type_name + "/" + pname + "/" + "download-times.txt";
+        QProcess p;
+        //p.start("curl", QStringList() <<"-o" << " /tmp/spark-store/download-times.txt" << downloadTimesUrl );
+        p.start("bash", QStringList() << "-c" << " curl -o /tmp/spark-store/download-times.txt "+ downloadTimesUrl );
+        p.waitForFinished();
+
 
         /*
         load.cancel();  // 打开并发加载线程前关闭正在执行的线程
